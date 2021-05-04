@@ -18,6 +18,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      -   name: Run yarn
+          run: yarn add chokidar
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:

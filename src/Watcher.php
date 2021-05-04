@@ -3,6 +3,7 @@
 namespace Spatie\Watcher;
 
 use Closure;
+use Spatie\Watcher\Exceptions\CouldNotStartWatcher;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -100,10 +101,9 @@ class Watcher
     public function start()
     {
         $watcher = $this->getWatchProcess();
-
         while (true) {
             if (! $watcher->isRunning()) {
-                break;
+                throw CouldNotStartWatcher::make($watcher);
             }
 
             if ($output = $watcher->getIncrementalOutput()) {
