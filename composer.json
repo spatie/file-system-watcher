@@ -1,11 +1,11 @@
 {
-    "name": "spatie/file_system_watcher",
+    "name": "spatie/file-system-watcher",
     "description": "Watch changes in the file system using PHP",
     "keywords": [
         "spatie",
-        "file_system_watcher"
+        "file-system-watcher"
     ],
-    "homepage": "https://github.com/spatie/file_system_watcher",
+    "homepage": "https://github.com/spatie/file-system-watcher",
     "license": "MIT",
     "authors": [
         {
