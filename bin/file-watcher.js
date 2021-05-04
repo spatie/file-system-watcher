@@ -7,8 +7,8 @@ const watcher = chokidar.watch(paths, {
 });
 
 watcher
-    .on('add', path => console.log(`add - ${path}`))
-    .on('change', path => console.log(`change - ${path}`))
-    .on('unlink', path => console.log(`unlink - ${path}`))
-    .on('addDir', path => console.log(`addDir - ${path}`))
-    .on('unlinkDir', path => console.log(`unlinkDir - ${path}`))
+    .on('add', path => console.log(`fileCreated - ${path}`))
+    .on('change', path => console.log(`fileUpdated - ${path}`))
+    .on('unlink', path => console.log(`fileDeleted - ${path}`))
+    .on('addDir', path => console.log(`directoryCreated - ${path}`))
+    .on('unlinkDir', path => console.log(`directoryDeleted - ${path}`))

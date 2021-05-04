@@ -14,6 +14,9 @@ class WatcherTest extends TestCase
 
         (new Watcher())
             ->paths([__DIR__ . '/testDirectory'])
+            ->onAnyEvent(function (string $type, string $path) {
+                ray($type, $path);
+            })
             ->start();
     }
 }

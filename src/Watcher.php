@@ -7,6 +7,12 @@ use Symfony\Component\Process\Process;
 
 class Watcher
 {
+    const EVENT_TYPE_FILE_CREATED = 'fileCreated';
+    const EVENT_TYPE_FILE_UPDATED = 'fileUpdated';
+    const EVENT_TYPE_FILE_DELETED = 'fileDeleted';
+    const EVENT_TYPE_DIRECTORY_CREATED = 'directoryAdded';
+    const EVENT_TYPE_DIRECTORY_DELETED = 'directoryDeleted';
+
     protected array $paths = [];
 
     /** @var callable[] */
@@ -19,10 +25,13 @@ class Watcher
     protected array $onFileDeleted = [];
 
     /** @var callable[] */
-    protected array $onDirectoryAdded = [];
+    protected array $onDirectoryCreated = [];
 
     /** @var callable[] */
     protected array $onDirectoryDeleted = [];
+
+    /** @var callable[] */
+    protected array $onAny = [];
 
     public function paths(array $paths): self
     {
@@ -49,13 +58,12 @@ class Watcher
     {
         $this->onFileDeleted[] = $onFileDeleted;
 
-
         return $this;
     }
 
-    public function onDirectoryAdded(callable $onDirectoryAdded): self
+    public function onDirectoryCreated(callable $onDirectoryCreated): self
     {
-        $this->onDirectoryAdded[] = $onDirectoryAdded;
+        $this->onDirectoryCreated[] = $onDirectoryCreated;
 
         return $this;
     }
@@ -67,8 +75,10 @@ class Watcher
         return $this;
     }
 
-    public function onAny(callable $callable): self
+    public function onAnyEvent(callable $callable): self
     {
+        $this->onAny[] = $callable;
+
         return $this;
     }
 
@@ -116,7 +126,24 @@ class Watcher
         foreach ($lines as $line) {
             [$type, $path] = explode(' - ', $line, 2);
 
-            ray($type, $path);
+            match ($type) {
+                static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path),
+                static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path),
+                static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path),
+                static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path),
+                static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path),
+            };
+
+            foreach ($this->onAny as $onAnyCallable) {
+                $onAnyCallable($type, $path);
+            }
+        }
+    }
+
+    protected function callAll(array $callables, string $path): void
+    {
+        foreach ($callables as $callable) {
+            $callable($path);
         }
     }
 }
