@@ -146,6 +146,8 @@ class Watcher
         foreach ($lines as $line) {
             [$type, $path] = explode(' - ', $line, 2);
 
+            $path = trim($path);
+
             match ($type) {
                 static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path),
                 static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path),

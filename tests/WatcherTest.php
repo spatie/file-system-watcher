@@ -20,7 +20,7 @@ class WatcherTest extends TestCase
 
         ray()->clearScreen();
 
-        $this->testDirectory = __DIR__ . '/testDirectory';
+        $this->testDirectory = __DIR__ . DIRECTORY_SEPARATOR . 'testDirectory';
 
         (new TemporaryDirectory($this->testDirectory))->empty();
 
