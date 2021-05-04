@@ -10,3 +10,4 @@ phpunit.xml
 psalm.xml
 vendor
 tests/testDirectory
+yarn.lock
