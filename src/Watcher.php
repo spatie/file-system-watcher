@@ -2,6 +2,7 @@
 
 namespace Spatie\Watcher;
 
+use Closure;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -32,6 +33,13 @@ class Watcher
 
     /** @var callable[] */
     protected array $onAny = [];
+
+    protected Closure $shouldContinue;
+
+    public function __construct()
+    {
+        $this->shouldContinue = fn () => true;
+    }
 
     public function paths(array $paths): self
     {
@@ -82,6 +90,13 @@ class Watcher
         return $this;
     }
 
+    public function shouldContinue(Closure $shouldContinue): self
+    {
+        $this->shouldContinue = $shouldContinue;
+
+        return $this;
+    }
+
     public function start()
     {
         $watcher = $this->getWatchProcess();
@@ -93,6 +108,10 @@ class Watcher
 
             if ($output = $watcher->getIncrementalOutput()) {
                 $this->actOnOutput($output);
+            }
+
+            if (! ($this->shouldContinue)()) {
+                break;
             }
 
             usleep(500 * 1000);
@@ -123,6 +142,7 @@ class Watcher
         $lines = explode(PHP_EOL, $output);
 
         $lines = array_filter($lines);
+
         foreach ($lines as $line) {
             [$type, $path] = explode(' - ', $line, 2);
 
