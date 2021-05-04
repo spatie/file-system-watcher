@@ -40,7 +40,7 @@ class WatcherTest extends TestCase
             })
             ->shouldContinue(function () {
                 if ($this->i === 5) {
-                    touch($this->testDirectory . '/test.txt');
+                    touch($this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt');
                 }
 
                 $this->i++;
@@ -52,7 +52,7 @@ class WatcherTest extends TestCase
         $this->assertCount(1, $this->recordedEvents);
         $this->assertEquals([
             'fileCreated',
-            $this->testDirectory . '/test.txt',
+            $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt',
         ], $this->recordedEvents[0]);
 
         $this->assertEquals($this->recordedEvents[0][1], $this->modifiedPath);
