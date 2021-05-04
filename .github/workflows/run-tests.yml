@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      -   name: Run yarn
+      -   name: Install chokidar
           run: yarn add chokidar
 
       - name: Setup PHP
