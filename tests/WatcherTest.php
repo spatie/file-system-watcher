@@ -92,4 +92,39 @@ class WatcherTest extends TestCase
 
         $this->assertEquals($testFile, $this->modifiedPath);
     }
+
+    /** @test */
+    public function it_can_detect_when_files_get_deleted()
+    {
+        $testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt';
+
+        touch($testFile);
+
+        (new Watcher())
+            ->paths([$this->testDirectory])
+            ->onFileDeleted(function (string $path) {
+                $this->modifiedPath = $path;
+            })
+            ->onAnyEvent(function (string $type, string $path) {
+                $this->recordedEvents[] = [$type, $path];
+            })
+            ->shouldContinue(function () use ($testFile) {
+                if ($this->i === 5) {
+                    unlink($testFile);
+                }
+
+                $this->i++;
+
+                return $this->i <= 7;
+            })
+            ->start();
+
+        $this->assertCount(1, $this->recordedEvents);
+        $this->assertEquals([
+            'fileDeleted',
+            $testFile,
+        ], $this->recordedEvents[0]);
+
+        $this->assertEquals($testFile, $this->modifiedPath);
+    }
 }
