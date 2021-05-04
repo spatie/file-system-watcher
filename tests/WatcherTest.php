@@ -28,7 +28,7 @@ class WatcherTest extends TestCase
     }
 
     /** @test */
-    public function it_can_watch_for_changes_in_the_file_system()
+    public function it_can_detect_when_files_get_created()
     {
         (new Watcher())
             ->paths([$this->testDirectory])
@@ -56,5 +56,40 @@ class WatcherTest extends TestCase
         ], $this->recordedEvents[0]);
 
         $this->assertEquals($this->recordedEvents[0][1], $this->modifiedPath);
+    }
+
+    /** @test */
+    public function it_can_detect_when_files_get_updated()
+    {
+        $testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt';
+
+        touch($testFile);
+
+        (new Watcher())
+            ->paths([$this->testDirectory])
+            ->onFileUpdated(function (string $path) {
+                $this->modifiedPath = $path;
+            })
+            ->onAnyEvent(function (string $type, string $path) {
+                $this->recordedEvents[] = [$type, $path];
+            })
+            ->shouldContinue(function () use ($testFile) {
+                if ($this->i === 5) {
+                    file_put_contents($testFile, 'updated');
+                }
+
+                $this->i++;
+
+                return $this->i <= 7;
+            })
+            ->start();
+
+        $this->assertCount(1, $this->recordedEvents);
+        $this->assertEquals([
+            'fileUpdated',
+            $testFile,
+        ], $this->recordedEvents[0]);
+
+        $this->assertEquals($testFile, $this->modifiedPath);
     }
 }
