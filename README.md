@@ -4,10 +4,20 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/file_system_watcher/run-tests?label=tests)](https://github.com/spatie/file_system_watcher/actions?query=workflow%3ATests+branch%3Amaster)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/file_system_watcher/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/file_system_watcher/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/file_system_watcher.svg?style=flat-square)](https://packagist.org/packages/spatie/file_system_watcher)
-
 ---
 
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
+This package allows you to react to all kinds of changes in the file system. 
+
+Here's how you can run code when a new file gets added.
+
+```php
+ (new Watcher())
+    ->paths($directory, $anotherDirectory)
+    ->onFileCreated(function (string $newFilePath) {
+        // do something...
+    })
+    ->watch();
+```
 
 ## Support us
 
@@ -22,15 +32,52 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 You can install the package via composer:
 
 ```bash
-composer require spatie/file_system_watcher
+composer require spatie/file-system-watcher
+```
+
+In your project, you should have the JavaScript package [`chokidar`](https://github.com/paulmillr/chokidar) installed. You can install it via npm
+
+```bash
+npm install chokidar
+```
+
+or Yarn
+
+```bash
+yarn add chokidar
 ```
 
 ## Usage
 
+Here's how you can start watching a directory and get notified of any changes.
+
 ```php
-$file_system_watcher = new Spatie\Watcher();
-echo $file_system_watcher->echoPhrase('Hello, Spatie!');
+ use Spatie\Watcher\Watcher
+ 
+ ;(new Watcher())
+    ->paths($directory)
+    ->onAnyChange(function (string $type, string $path) {
+        if ($type === Watcher::EVENT_TYPE_FILE_CREATED) {
+            echo "file {$path} was created";
+        }
+    })
 ```
+
+You can pass as many directories as you like to `paths`.
+
+### Detected the type of change
+
+The `$type` parameter of the closure you pass to `onAnyChange` can contain one of these values:
+
+- `Watcher::EVENT_TYPE_FILE_CREATED`: a file was created
+- `Watcher::EVENT_TYPE_FILE_UPDATED`: a file was updated
+- `Watcher::EVENT_TYPE_FILE_DELETED`: a file was deleted
+- `Watcher::EVENT_TYPE_DIRECTORY_CREATED`: a directory was created
+- `Watcher::EVENT_TYPE_DIRECTORY_DELETED`: a directory was deleted
+
+### Listening for specific events
+
+// TODO
 
 ## Testing
 

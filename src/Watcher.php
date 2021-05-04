@@ -37,6 +37,11 @@ class Watcher
 
     protected Closure $shouldContinue;
 
+    public static function create(): self
+    {
+        return new static();
+    }
+
     public function __construct()
     {
         $this->shouldContinue = fn () => true;
@@ -84,7 +89,7 @@ class Watcher
         return $this;
     }
 
-    public function onAnyEvent(callable $callable): self
+    public function onAnyChange(callable $callable): self
     {
         $this->onAny[] = $callable;
 

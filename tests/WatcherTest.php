@@ -35,7 +35,7 @@ class WatcherTest extends TestCase
             ->onFileCreated(function (string $path) {
                 $this->modifiedPath = $path;
             })
-            ->onAnyEvent(function (string $type, string $path) {
+            ->onAnyChange(function (string $type, string $path) {
                 $this->recordedEvents[] = [$type, $path];
             })
             ->shouldContinue(function () {
@@ -70,7 +70,7 @@ class WatcherTest extends TestCase
             ->onFileUpdated(function (string $path) {
                 $this->modifiedPath = $path;
             })
-            ->onAnyEvent(function (string $type, string $path) {
+            ->onAnyChange(function (string $type, string $path) {
                 $this->recordedEvents[] = [$type, $path];
             })
             ->shouldContinue(function () use ($testFile) {
@@ -105,7 +105,7 @@ class WatcherTest extends TestCase
             ->onFileDeleted(function (string $path) {
                 $this->modifiedPath = $path;
             })
-            ->onAnyEvent(function (string $type, string $path) {
+            ->onAnyChange(function (string $type, string $path) {
                 $this->recordedEvents[] = [$type, $path];
             })
             ->shouldContinue(function () use ($testFile) {
@@ -138,7 +138,7 @@ class WatcherTest extends TestCase
             ->onDirectoryCreated(function (string $path) {
                 $this->modifiedPath = $path;
             })
-            ->onAnyEvent(function (string $type, string $path) {
+            ->onAnyChange(function (string $type, string $path) {
                 $this->recordedEvents[] = [$type, $path];
             })
             ->shouldContinue(function () use ($newDirectoryPath) {
@@ -173,7 +173,7 @@ class WatcherTest extends TestCase
             ->onDirectoryDeleted(function (string $path) {
                 $this->modifiedPath = $path;
             })
-            ->onAnyEvent(function (string $type, string $path) {
+            ->onAnyChange(function (string $type, string $path) {
                 $this->recordedEvents[] = [$type, $path];
             })
             ->shouldContinue(function () use ($directory) {
