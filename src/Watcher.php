@@ -12,7 +12,7 @@ class Watcher
     const EVENT_TYPE_FILE_CREATED = 'fileCreated';
     const EVENT_TYPE_FILE_UPDATED = 'fileUpdated';
     const EVENT_TYPE_FILE_DELETED = 'fileDeleted';
-    const EVENT_TYPE_DIRECTORY_CREATED = 'directoryAdded';
+    const EVENT_TYPE_DIRECTORY_CREATED = 'directoryCreated';
     const EVENT_TYPE_DIRECTORY_DELETED = 'directoryDeleted';
 
     protected array $paths = [];
