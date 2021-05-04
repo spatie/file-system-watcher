@@ -160,4 +160,39 @@ class WatcherTest extends TestCase
 
         $this->assertEquals($newDirectoryPath, $this->modifiedPath);
     }
+
+    /** @test */
+    public function it_can_detect_when_a_directory_gets_deleted()
+    {
+        $directoryPath = $this->testDirectory . DIRECTORY_SEPARATOR . 'new';
+
+        $directory = (new TemporaryDirectory($directoryPath))->empty();
+
+        (new Watcher())
+            ->paths([$this->testDirectory])
+            ->onDirectoryDeleted(function (string $path) {
+                $this->modifiedPath = $path;
+            })
+            ->onAnyEvent(function (string $type, string $path) {
+                $this->recordedEvents[] = [$type, $path];
+            })
+            ->shouldContinue(function () use ($directory) {
+                if ($this->i === 5) {
+                    $directory->delete();
+                }
+
+                $this->i++;
+
+                return $this->i <= 7;
+            })
+            ->start();
+
+        $this->assertCount(1, $this->recordedEvents);
+        $this->assertEquals([
+            'directoryDeleted',
+            $directoryPath,
+        ], $this->recordedEvents[0]);
+
+        $this->assertEquals($directoryPath, $this->modifiedPath);
+    }
 }
