@@ -76,7 +76,23 @@ The `$type` parameter of the closure you pass to `onAnyChange` can contain one o
 
 ### Listening for specific events
 
-// TODO
+To handle file systems events of a certain type, you can make use of dedicated functions. Here's how you would listen for file creations only.
+
+```php
+ (new Watcher())
+    ->paths($directory)
+    ->onFileCreated(function (string $newFilePath) {
+        // do something...
+    })
+```
+
+These are the related available methods:
+
+- `onFileCreated()`: accepts a closure that will get passed the new file path
+- `onFileUpdated()`: accepts a closure that will get passed the updated file path
+- `onFileDeleted()`: accepts a closure that will get passed the deleted file path
+- `onDirectoryCreated()`: accepts a closure that will get passed the created directory path
+- `onDirectoryDeleted()`: accepts a closure that will get passed the deleted directory path
 
 ## Testing
 
