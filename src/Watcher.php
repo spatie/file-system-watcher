@@ -47,7 +47,7 @@ class Watcher
         $this->shouldContinue = fn () => true;
     }
 
-    public function paths(string|array $paths): self
+    public function paths(string | array $paths): self
     {
         if (is_string($paths)) {
             $paths = func_get_args();
