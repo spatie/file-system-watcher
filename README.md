@@ -1,7 +1,7 @@
 # Watch changes in the file system using PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/file-system-watcher.svg?style=flat-square)](https://packagist.org/packages/spatie/file-system-watcher)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/file-system-watcher/run-tests?label=tests)](https://github.com/spatie/file-system-watcher/actions?query=workflow%3ATests+branch%3Amaster)
+[![Tests](https://github.com/spatie/file-system-watcher/actions/workflows/run-tests.yml/badge.svg)](https://github.com/spatie/file-system-watcher/actions/workflows/run-tests.yml)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/file-system-watcher/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/file-system-watcher/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/file-system-watcher.svg?style=flat-square)](https://packagist.org/packages/spatie/file-system-watcher)
 
