@@ -16,7 +16,7 @@ Watch::path($directory)
     ->onFileCreated(function (string $newFilePath) {
         // do something...
     })
-    ->watch();
+    ->start();
 ```
 
 ## Support us
@@ -59,10 +59,13 @@ Watch::path($directory)
         if ($type === Watch::EVENT_TYPE_FILE_CREATED) {
             echo "file {$path} was created";
         }
-    });
+    })
+    ->start();
 ```
 
-You can pass as many directories as you like to `paths`.
+You can pass as many directories as you like to `path`.
+
+To start watching, call the `start` method.
 
 ### Detected the type of change
 
