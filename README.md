@@ -10,7 +10,9 @@ This package allows you to react to all kinds of changes in the file system.
 Here's how you can run code when a new file gets added.
 
 ```php
- (new Watcher())
+use Spatie\Watcher\Watcher;
+
+Watcher::create()
     ->paths($directory, $anotherDirectory)
     ->onFileCreated(function (string $newFilePath) {
         // do something...
@@ -51,15 +53,15 @@ yarn add chokidar
 Here's how you can start watching a directory and get notified of any changes.
 
 ```php
- use Spatie\Watcher\Watcher
- 
- ;(new Watcher())
+use Spatie\Watcher\Watcher;
+
+Watcher::create()
     ->paths($directory)
     ->onAnyChange(function (string $type, string $path) {
         if ($type === Watcher::EVENT_TYPE_FILE_CREATED) {
             echo "file {$path} was created";
         }
-    })
+    });
 ```
 
 You can pass as many directories as you like to `paths`.
@@ -79,11 +81,13 @@ The `$type` parameter of the closure you pass to `onAnyChange` can contain one o
 To handle file systems events of a certain type, you can make use of dedicated functions. Here's how you would listen for file creations only.
 
 ```php
- (new Watcher())
+use Spatie\Watcher\Watcher;
+
+Watcher::create()
     ->paths($directory)
     ->onFileCreated(function (string $newFilePath) {
         // do something...
-    })
+    });
 ```
 
 These are the related available methods:
@@ -93,6 +97,30 @@ These are the related available methods:
 - `onFileDeleted()`: accepts a closure that will get passed the deleted file path
 - `onDirectoryCreated()`: accepts a closure that will get passed the created directory path
 - `onDirectoryDeleted()`: accepts a closure that will get passed the deleted directory path
+
+### Perform multiple tasks
+
+You can call `onAnyChange`, 'onFileCreated', ... multiple times. All given closures will be performed
+
+```php
+use Spatie\Watcher\Watcher;
+
+Watcher::create()
+    ->paths($directory)
+    ->onFileCreated(function (string $newFilePath) {
+        // do something on file creation...
+    })
+    ->onFileCreated(function (string $newFilePath) {
+        // do something else on file creation...
+    })
+    ->onAnyChange(function (string $type, string $path) {
+        // do something...
+    })
+    ->onAnyChange(function (string $type, string $path) {
+        // do something else...
+    })
+    // ...
+```
 
 ## Testing
 
