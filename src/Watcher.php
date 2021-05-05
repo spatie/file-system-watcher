@@ -107,9 +107,10 @@ class Watcher
         return $this;
     }
 
-    public function start()
+    public function start(): void
     {
         $watcher = $this->getWatchProcess();
+
         while (true) {
             if (! $watcher->isRunning()) {
                 throw CouldNotStartWatcher::make($watcher);

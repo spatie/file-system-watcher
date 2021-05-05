@@ -122,6 +122,21 @@ Watcher::create()
     // ...
 ```
 
+### Stopping the watcher gracefully
+
+By default, the watcher will continue indefinitely when started. To gracefully stop the watcher, you can call `shouldContinue` and pass it a closure. If the closure returns a falsy value, the watcher will stop. The given closure will be executed every 0.5 second.
+
+```php
+use Spatie\Watcher\Watcher;
+
+Watcher::create()
+    ->paths($directory)
+    ->shouldContinue(function () {
+        // return true or false
+    })
+    // ...
+```
+
 ## Testing
 
 ```bash
