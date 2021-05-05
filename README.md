@@ -165,6 +165,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
 
+Parts of this package are inspired by [Laravel Octane](https://github.com/laravel/octane)
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
