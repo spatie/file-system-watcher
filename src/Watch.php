@@ -7,7 +7,7 @@ use Spatie\Watcher\Exceptions\CouldNotStartWatcher;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class Watcher
+class Watch
 {
     const EVENT_TYPE_FILE_CREATED = 'fileCreated';
     const EVENT_TYPE_FILE_UPDATED = 'fileUpdated';
@@ -37,9 +37,14 @@ class Watcher
 
     protected Closure $shouldContinue;
 
-    public static function create(): self
+    public static function path(string $path): self
     {
-        return new static();
+        return (new self())->setPaths($path);
+    }
+
+    public static function paths(...$paths): self
+    {
+        return (new self())->setPaths($paths);
     }
 
     public function __construct()
@@ -47,7 +52,7 @@ class Watcher
         $this->shouldContinue = fn () => true;
     }
 
-    public function paths(string | array $paths): self
+    public function setPaths(string | array $paths): self
     {
         if (is_string($paths)) {
             $paths = func_get_args();

@@ -4,9 +4,9 @@ namespace Spatie\Watcher\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
-use Spatie\Watcher\Watcher;
+use Spatie\Watcher\Watch;
 
-class WatcherTest extends TestCase
+class WatchTest extends TestCase
 {
     protected string $testDirectory;
 
@@ -30,8 +30,7 @@ class WatcherTest extends TestCase
     /** @test */
     public function it_can_detect_when_files_get_created()
     {
-        (new Watcher())
-            ->paths([$this->testDirectory])
+        Watch::path($this->testDirectory)
             ->onFileCreated(function (string $path) {
                 $this->modifiedPath = $path;
             })
@@ -65,8 +64,7 @@ class WatcherTest extends TestCase
 
         touch($testFile);
 
-        (new Watcher())
-            ->paths([$this->testDirectory])
+        Watch::path($this->testDirectory)
             ->onFileUpdated(function (string $path) {
                 $this->modifiedPath = $path;
             })
@@ -100,8 +98,7 @@ class WatcherTest extends TestCase
 
         touch($testFile);
 
-        (new Watcher())
-            ->paths([$this->testDirectory])
+        Watch::path($this->testDirectory)
             ->onFileDeleted(function (string $path) {
                 $this->modifiedPath = $path;
             })
@@ -133,8 +130,7 @@ class WatcherTest extends TestCase
     {
         $newDirectoryPath = $this->testDirectory . DIRECTORY_SEPARATOR . 'new';
 
-        (new Watcher())
-            ->paths([$this->testDirectory])
+        Watch::path($this->testDirectory)
             ->onDirectoryCreated(function (string $path) {
                 $this->modifiedPath = $path;
             })
@@ -168,8 +164,7 @@ class WatcherTest extends TestCase
 
         $directory = (new TemporaryDirectory($directoryPath))->empty();
 
-        (new Watcher())
-            ->paths([$this->testDirectory])
+        Watch::path($this->testDirectory)
             ->onDirectoryDeleted(function (string $path) {
                 $this->modifiedPath = $path;
             })

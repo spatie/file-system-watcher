@@ -10,10 +10,9 @@ This package allows you to react to all kinds of changes in the file system.
 Here's how you can run code when a new file gets added.
 
 ```php
-use Spatie\Watcher\Watcher;
+use Spatie\Watcher\Watch;
 
-Watcher::create()
-    ->paths($directory, $anotherDirectory)
+Watch::path($directory)
     ->onFileCreated(function (string $newFilePath) {
         // do something...
     })
@@ -28,7 +27,7 @@ We invest a lot of resources into creating [best in class open source packages](
 
 We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
-## Installation
+## Installation  
 
 You can install the package via composer:
 
@@ -53,12 +52,11 @@ yarn add chokidar
 Here's how you can start watching a directory and get notified of any changes.
 
 ```php
-use Spatie\Watcher\Watcher;
+use Spatie\Watcher\Watch;
 
-Watcher::create()
-    ->paths($directory)
+Watch::path($directory)
     ->onAnyChange(function (string $type, string $path) {
-        if ($type === Watcher::EVENT_TYPE_FILE_CREATED) {
+        if ($type === Watch::EVENT_TYPE_FILE_CREATED) {
             echo "file {$path} was created";
         }
     });
@@ -81,10 +79,9 @@ The `$type` parameter of the closure you pass to `onAnyChange` can contain one o
 To handle file systems events of a certain type, you can make use of dedicated functions. Here's how you would listen for file creations only.
 
 ```php
-use Spatie\Watcher\Watcher;
+use Spatie\Watcher\Watch;
 
-Watcher::create()
-    ->paths($directory)
+Watch::path($directory)
     ->onFileCreated(function (string $newFilePath) {
         // do something...
     });
@@ -98,15 +95,24 @@ These are the related available methods:
 - `onDirectoryCreated()`: accepts a closure that will get passed the created directory path
 - `onDirectoryDeleted()`: accepts a closure that will get passed the deleted directory path
 
-### Perform multiple tasks
+### Watching multiple paths
+
+You can pass multiple paths to the `paths` method.
+
+```php
+use Spatie\Watcher\Watch;
+
+Watch::paths($directory, $anotherDirectory);
+```
+
+### Performing multiple tasks
 
 You can call `onAnyChange`, 'onFileCreated', ... multiple times. All given closures will be performed
 
 ```php
-use Spatie\Watcher\Watcher;
+use Spatie\Watcher\Watch;
 
-Watcher::create()
-    ->paths($directory)
+Watch::path($directory)
     ->onFileCreated(function (string $newFilePath) {
         // do something on file creation...
     })
@@ -127,10 +133,9 @@ Watcher::create()
 By default, the watcher will continue indefinitely when started. To gracefully stop the watcher, you can call `shouldContinue` and pass it a closure. If the closure returns a falsy value, the watcher will stop. The given closure will be executed every 0.5 second.
 
 ```php
-use Spatie\Watcher\Watcher;
+use Spatie\Watcher\Watch;
 
-Watcher::create()
-    ->paths($directory)
+Watch::path($directory)
     ->shouldContinue(function () {
         // return true or false
     })
