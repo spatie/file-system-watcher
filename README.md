@@ -16,7 +16,7 @@ Watch::path($directory)
     ->onFileCreated(function (string $newFilePath) {
         // do something...
     })
-    ->watch();
+    ->start();
 ```
 
 ## Support us
