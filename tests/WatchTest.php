@@ -139,7 +139,6 @@ class WatchTest extends TestCase
                 $this->recordedEvents[] = [$type, $path];
             })
             ->shouldContinue(function () use ($newDirectoryPath) {
-                return true;
                 if ($this->i === 5) {
                     mkdir($newDirectoryPath);
                 }
