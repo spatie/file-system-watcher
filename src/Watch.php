@@ -137,13 +137,12 @@ class Watch
     {
         $command = [
             (new ExecutableFinder)->find('node'),
-            'file-watcher.js',
+            realpath(__DIR__ . '/../bin/file-watcher.js'),
             json_encode($this->paths),
         ];
 
         $process = new Process(
             command: $command,
-            cwd: realpath(__DIR__ . '/../bin'),
             timeout: null,
         );
 
