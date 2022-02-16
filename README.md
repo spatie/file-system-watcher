@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/file-system-watcher/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/file-system-watcher/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/file-system-watcher.svg?style=flat-square)](https://packagist.org/packages/spatie/file-system-watcher)
 
-This package allows you to react to all kinds of changes in the file system. 
+This package allows you to react to all kinds of changes in the file system.
 
 Here's how you can run code when a new file gets added.
 
@@ -23,11 +23,14 @@ Watch::path($directory)
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/file-system-watcher.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/file-system-watcher)
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can
+support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
+You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards
+on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
-## Installation  
+## Installation
 
 You can install the package via composer:
 
@@ -35,7 +38,8 @@ You can install the package via composer:
 composer require spatie/file-system-watcher
 ```
 
-In your project, you should have the JavaScript package [`chokidar`](https://github.com/paulmillr/chokidar) installed. You can install it via npm
+In your project, you should have the JavaScript package [`chokidar`](https://github.com/paulmillr/chokidar) installed.
+You can install it via npm
 
 ```bash
 npm install chokidar
@@ -79,7 +83,8 @@ The `$type` parameter of the closure you pass to `onAnyChange` can contain one o
 
 ### Listening for specific events
 
-To handle file systems events of a certain type, you can make use of dedicated functions. Here's how you would listen for file creations only.
+To handle file systems events of a certain type, you can make use of dedicated functions. Here's how you would listen
+for file creations only.
 
 ```php
 use Spatie\Watcher\Watch;
@@ -133,7 +138,9 @@ Watch::path($directory)
 
 ### Stopping the watcher gracefully
 
-By default, the watcher will continue indefinitely when started. To gracefully stop the watcher, you can call `shouldContinue` and pass it a closure. If the closure returns a falsy value, the watcher will stop. The given closure will be executed every 0.5 second.
+By default, the watcher will continue indefinitely when started. To gracefully stop the watcher, you can
+call `shouldContinue` and pass it a closure. If the closure returns a falsy value, the watcher will stop. The given
+closure will be executed every 0.5 second.
 
 ```php
 use Spatie\Watcher\Watch;
@@ -142,6 +149,18 @@ Watch::path($directory)
     ->shouldContinue(function () {
         // return true or false
     })
+    // ...
+```
+
+### Change the speed of watcher
+
+By default, the changes are tracked every 0.5 seconds, however you could change that.
+
+```php
+use Spatie\Watcher\Watch;
+
+Watch::path($directory)
+    ->setIntervalTime(100) //microseconds
     // ...
 ```
 

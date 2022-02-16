@@ -1,5 +1,5 @@
 {
-    "name": "spatie/file-system-watcher",
+    "name": "steve-moretz/file-system-watcher",
     "description": "Watch changes in the file system using PHP",
     "keywords": [
         "spatie",
