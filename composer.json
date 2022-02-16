@@ -12,6 +12,10 @@
             "name": "Freek Van der Herten",
             "email": "freek@spatie.be",
             "role": "Developer"
+        },
+        {
+            "name": "Steve Moretz",
+            "role": "Developer"
         }
     ],
     "require": {
