@@ -7,13 +7,12 @@ use Spatie\Watcher\Exceptions\CouldNotStartWatcher;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class Watch
-{
-    const EVENT_TYPE_FILE_CREATED = 'fileCreated';
-    const EVENT_TYPE_FILE_UPDATED = 'fileUpdated';
-    const EVENT_TYPE_FILE_DELETED = 'fileDeleted';
-    const EVENT_TYPE_DIRECTORY_CREATED = 'directoryCreated';
-    const EVENT_TYPE_DIRECTORY_DELETED = 'directoryDeleted';
+class Watch {
+    const EVENT_TYPE_FILE_CREATED = "fileCreated";
+    const EVENT_TYPE_FILE_UPDATED = "fileUpdated";
+    const EVENT_TYPE_FILE_DELETED = "fileDeleted";
+    const EVENT_TYPE_DIRECTORY_CREATED = "directoryCreated";
+    const EVENT_TYPE_DIRECTORY_DELETED = "directoryDeleted";
 
     protected array $paths = [];
 
@@ -37,23 +36,24 @@ class Watch
 
     protected Closure $shouldContinue;
 
-    public static function path(string $path): self
-    {
+    public static function path(string $path): self {
         return (new self())->setPaths($path);
     }
 
-    public static function paths(...$paths): self
-    {
+    public static function paths(...$paths): self {
         return (new self())->setPaths($paths);
     }
 
-    public function __construct()
-    {
-        $this->shouldContinue = fn () => true;
+    public function __construct() {
+        $this->shouldContinue = fn() => true;
     }
 
-    public function setPaths(string | array $paths): self
-    {
+    /**
+     * @param string | array $paths
+     *
+     * @return $this
+     */
+    public function setPaths($paths): self {
         if (is_string($paths)) {
             $paths = func_get_args();
         }
@@ -63,61 +63,53 @@ class Watch
         return $this;
     }
 
-    public function onFileCreated(callable $onFileCreated): self
-    {
+    public function onFileCreated(callable $onFileCreated): self {
         $this->onFileCreated[] = $onFileCreated;
 
         return $this;
     }
 
-    public function onFileUpdated(callable $onFileUpdated): self
-    {
+    public function onFileUpdated(callable $onFileUpdated): self {
         $this->onFileUpdated[] = $onFileUpdated;
 
         return $this;
     }
 
-    public function onFileDeleted(callable $onFileDeleted): self
-    {
+    public function onFileDeleted(callable $onFileDeleted): self {
         $this->onFileDeleted[] = $onFileDeleted;
 
         return $this;
     }
 
-    public function onDirectoryCreated(callable $onDirectoryCreated): self
-    {
+    public function onDirectoryCreated(callable $onDirectoryCreated): self {
         $this->onDirectoryCreated[] = $onDirectoryCreated;
 
         return $this;
     }
 
-    public function onDirectoryDeleted(callable $onDirectoryDeleted): self
-    {
+    public function onDirectoryDeleted(callable $onDirectoryDeleted): self {
         $this->onDirectoryDeleted[] = $onDirectoryDeleted;
 
         return $this;
     }
 
-    public function onAnyChange(callable $callable): self
-    {
+    public function onAnyChange(callable $callable): self {
         $this->onAny[] = $callable;
 
         return $this;
     }
 
-    public function shouldContinue(Closure $shouldContinue): self
-    {
+    public function shouldContinue(Closure $shouldContinue): self {
         $this->shouldContinue = $shouldContinue;
 
         return $this;
     }
 
-    public function start(): void
-    {
+    public function start(): void {
         $watcher = $this->getWatchProcess();
 
         while (true) {
-            if (! $watcher->isRunning()) {
+            if (!$watcher->isRunning()) {
                 throw CouldNotStartWatcher::make($watcher);
             }
 
@@ -125,7 +117,7 @@ class Watch
                 $this->actOnOutput($output);
             }
 
-            if (! ($this->shouldContinue)()) {
+            if (!($this->shouldContinue)()) {
                 break;
             }
 
@@ -133,18 +125,19 @@ class Watch
         }
     }
 
-    protected function getWatchProcess(): Process
-    {
+    protected function getWatchProcess(): Process {
         $command = [
-            (new ExecutableFinder)->find('node'),
-            'file-watcher.js',
+            (new ExecutableFinder())->find("node"),
+            "file-watcher.js",
             json_encode($this->paths),
         ];
 
         $process = new Process(
-            command: $command,
-            cwd: realpath(__DIR__ . '/../bin'),
-            timeout: null,
+            $command,
+            dirname(__DIR__) . "/bin",
+            null,
+            null,
+            null
         );
 
         $process->start();
@@ -152,24 +145,35 @@ class Watch
         return $process;
     }
 
-    protected function actOnOutput(string $output): void
-    {
+    protected function actOnOutput(string $output): void {
         $lines = explode(PHP_EOL, $output);
 
         $lines = array_filter($lines);
 
         foreach ($lines as $line) {
-            [$type, $path] = explode(' - ', $line, 2);
+            [$type, $path] = explode(" - ", $line, 2);
 
             $path = trim($path);
 
-            match ($type) {
-                static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path),
-                static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path),
-                static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path),
-                static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path),
-                static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path),
-            };
+            switch ($type) {
+                case static::EVENT_TYPE_FILE_CREATED:
+                    $this->callAll($this->onFileCreated, $path);
+                    break;
+                case static::EVENT_TYPE_FILE_UPDATED:
+                    $this->callAll($this->onFileUpdated, $path);
+                    break;
+                case static::EVENT_TYPE_FILE_DELETED:
+                    $this->callAll($this->onFileDeleted, $path);
+                    break;
+                case static::EVENT_TYPE_DIRECTORY_CREATED:
+                    $this->callAll($this->onDirectoryCreated, $path);
+                    break;
+                case static::EVENT_TYPE_DIRECTORY_DELETED:
+                    $this->callAll($this->onDirectoryDeleted, $path);
+                    break;
+                default:
+                    break;
+            }
 
             foreach ($this->onAny as $onAnyCallable) {
                 $onAnyCallable($type, $path);
@@ -177,8 +181,7 @@ class Watch
         }
     }
 
-    protected function callAll(array $callables, string $path): void
-    {
+    protected function callAll(array $callables, string $path): void {
         foreach ($callables as $callable) {
             $callable($path);
         }
