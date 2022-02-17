@@ -106,7 +106,7 @@ class Watch
         return $this;
     }
     
-    public function setIntervalTime(int $interval): self 
+    public function setIntervalTime(int $interval): self
     {
         $this->interval = $interval;
 
