@@ -14,6 +14,7 @@ class Watch
     const EVENT_TYPE_FILE_DELETED = 'fileDeleted';
     const EVENT_TYPE_DIRECTORY_CREATED = 'directoryCreated';
     const EVENT_TYPE_DIRECTORY_DELETED = 'directoryDeleted';
+    protected int $interval = 500 * 1000;
 
     protected array $paths = [];
 
@@ -104,6 +105,13 @@ class Watch
 
         return $this;
     }
+    
+    public function setIntervalTime(int $interval): self 
+    {
+        $this->interval = $interval;
+
+        return $this;
+    }
 
     public function shouldContinue(Closure $shouldContinue): self
     {
@@ -129,7 +137,7 @@ class Watch
                 break;
             }
 
-            usleep(500 * 1000);
+            usleep($this->interval);
         }
     }
 
