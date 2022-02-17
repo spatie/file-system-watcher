@@ -145,6 +145,20 @@ Watch::path($directory)
     // ...
 ```
 
+### Change the speed of watcher
+
+By default, the changes are tracked every 0.5 seconds, however you could change that.
+
+```php
+use Spatie\Watcher\Watch;
+
+Watch::path($directory)
+    ->setIntervalTime(1000000) //unit is microsecond therefore -> 0.1s
+    // ...rest of your methods
+```
+
+Notice : there is no file watching based on polling going on.
+
 ## Testing
 
 ```bash
