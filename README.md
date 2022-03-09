@@ -1,3 +1,6 @@
+
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 # Watch changes in the file system using PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/file-system-watcher.svg?style=flat-square)](https://packagist.org/packages/spatie/file-system-watcher)
