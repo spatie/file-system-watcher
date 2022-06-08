@@ -68,7 +68,9 @@ Watch::path($directory)
 
 You can pass as many directories as you like to `path`.
 
-To start watching, call the `start` method.
+To start watching, call the `start` method. Note that the `start` method will never end. Any code after that will not be executed. 
+
+To make sure that the watcher keeps watching in production, monitor the script or command that starts it with something like [Supervisord](http://supervisord.org).
 
 ### Detected the type of change
 
