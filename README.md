@@ -70,7 +70,7 @@ You can pass as many directories as you like to `path`.
 
 To start watching, call the `start` method. Note that the `start` method will never end. Any code after that will not be executed. 
 
-To make sure that the watcher keeps watching in production, monitor the script or command that starts it with something like [Supervisord](http://supervisord.org).
+To make sure that the watcher keeps watching in production, monitor the script or command that starts it with something like [Supervisord](http://supervisord.org).  See [Supervisord example configuration](#supervisord-example-configuration) below.
 
 ### Detected the type of change
 
@@ -170,9 +170,9 @@ Notice : there is no file watching based on polling going on.
 composer test
 ```
 
-## Supervisor example configuration
+## Supervisord example configuration
 
-Create a new Supervisor configuration like below.  While using Supervisor, you must specicfy your Node.js and PHP executables in your command paramater: `env PATH="/usr/local/bin"` for Node.js, the absolute path to PHP and your project's path.
+Create a new Supervisord configuration to monitor a Laravel artisan command which calls the watcher.  While using Supervisord, you must specicfy your Node.js and PHP executables in your command paramater: `env PATH="/usr/local/bin"` for Node.js, the absolute path to PHP and your project's path.
 
 
 ```
@@ -182,7 +182,7 @@ directory=/your/project
 command=env PATH="/usr/local/bin" /absolute/path/to/php /your/project/artisan watch-for-files
 autostart=true
 autorestart=false
-user=ryan
+user=username
 redirect_stderr=true
 stdout_logfile=/your/project/storage/logs/watch.log
 stopwaitsecs=3600
