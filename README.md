@@ -170,6 +170,24 @@ Notice : there is no file watching based on polling going on.
 composer test
 ```
 
+## Supervisor example configuration
+
+Create a new Supervisor configuration like below.  While using Supervisor, you must specicfy your Node.js and PHP executables in your command paramater: `env PATH="/usr/local/bin"` for Node.js, the absolute path to PHP and your project's path.
+
+
+```
+[program:watch]
+process_name=%(program_name)s
+directory=/your/project
+command=env PATH="/usr/local/bin" /absolute/path/to/php /your/project/artisan watch-for-files
+autostart=true
+autorestart=false
+user=ryan
+redirect_stderr=true
+stdout_logfile=/your/project/storage/logs/watch.log
+stopwaitsecs=3600
+```
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
