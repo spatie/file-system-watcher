@@ -2,6 +2,20 @@
 
 All notable changes to `file-system-watcher` will be documented in this file.
 
+## 1.1.1 - 2022-06-16
+
+### What's Changed
+
+- Add example Supervisord configuration so package can find Node.js by @ryatkins in https://github.com/spatie/file-system-watcher/pull/12
+- Fixed getWatchProcess by @joeworkman in https://github.com/spatie/file-system-watcher/pull/2
+
+### New Contributors
+
+- @ryatkins made their first contribution in https://github.com/spatie/file-system-watcher/pull/12
+- @joeworkman made their first contribution in https://github.com/spatie/file-system-watcher/pull/2
+
+**Full Changelog**: https://github.com/spatie/file-system-watcher/compare/1.1.0...1.1.1
+
 ## 1.1.0 - 2022-02-17
 
 ## What's Changed
