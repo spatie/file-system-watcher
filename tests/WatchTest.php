@@ -1,194 +1,173 @@
 <?php
 
-namespace Spatie\Watcher\Tests;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 use Spatie\Watcher\Watch;
 
-class WatchTest extends TestCase
-{
-    protected string $testDirectory;
+uses(PHPUnit\Framework\TestCase::class);
 
-    protected int $i = 0;
+beforeEach(function () {
+    ray()->clearScreen();
 
-    protected array $recordedEvents = [];
+    $this->testDirectory = __DIR__ . DIRECTORY_SEPARATOR . 'testDirectory';
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    (new TemporaryDirectory($this->testDirectory))->empty();
 
-        ray()->clearScreen();
+    $this->recordedEvents = [];
 
-        $this->testDirectory = __DIR__ . DIRECTORY_SEPARATOR . 'testDirectory';
+    $this->i = 0;
+});
 
-        (new TemporaryDirectory($this->testDirectory))->empty();
+it('can detect when files get created', function () {
+    Watch::path($this->testDirectory)
+        ->onFileCreated(function (string $path) {
+            $this->modifiedPath = $path;
+        })
+        ->onAnyChange(function (string $type, string $path) {
+            $this->recordedEvents[] = [$type, $path];
+        })
+        ->shouldContinue(function () {
+            if ($this->i === 5) {
+                touch($this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt');
+            }
 
-        $this->i = 0;
-    }
+            $this->i++;
 
-    /** @test */
-    public function it_can_detect_when_files_get_created()
-    {
-        Watch::path($this->testDirectory)
-            ->onFileCreated(function (string $path) {
-                $this->modifiedPath = $path;
-            })
-            ->onAnyChange(function (string $type, string $path) {
-                $this->recordedEvents[] = [$type, $path];
-            })
-            ->shouldContinue(function () {
-                if ($this->i === 5) {
-                    touch($this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt');
-                }
+            return $this->i <= 7;
+        })
+        ->start();
 
-                $this->i++;
-
-                return $this->i <= 7;
-            })
-            ->start();
-
-        $this->assertCount(1, $this->recordedEvents);
-        $this->assertEquals([
+    expect($this->recordedEvents)->toHaveCount(1)
+        ->and($this->recordedEvents[0])->toEqual([
             'fileCreated',
             $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt',
-        ], $this->recordedEvents[0]);
+        ]);
 
-        $this->assertEquals($this->recordedEvents[0][1], $this->modifiedPath);
-    }
+    expect($this->modifiedPath)->toEqual($this->recordedEvents[0][1]);
+});
 
-    /** @test */
-    public function it_can_detect_when_files_get_updated()
-    {
-        $testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt';
+it('can detect when files get updated', function () {
+    $testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt';
 
-        touch($testFile);
+    touch($testFile);
 
-        Watch::path($this->testDirectory)
-            ->onFileUpdated(function (string $path) {
-                $this->modifiedPath = $path;
-            })
-            ->onAnyChange(function (string $type, string $path) {
-                $this->recordedEvents[] = [$type, $path];
-            })
-            ->shouldContinue(function () use ($testFile) {
-                if ($this->i === 5) {
-                    file_put_contents($testFile, 'updated');
-                }
+    Watch::path($this->testDirectory)
+        ->onFileUpdated(function (string $path) {
+            $this->modifiedPath = $path;
+        })
+        ->onAnyChange(function (string $type, string $path) {
+            $this->recordedEvents[] = [$type, $path];
+        })
+        ->shouldContinue(function () use ($testFile) {
+            if ($this->i === 5) {
+                file_put_contents($testFile, 'updated');
+            }
 
-                $this->i++;
+            $this->i++;
 
-                return $this->i <= 7;
-            })
-            ->start();
+            return $this->i <= 7;
+        })
+        ->start();
 
-        $this->assertCount(1, $this->recordedEvents);
-        $this->assertEquals([
+    expect($this->recordedEvents)->toHaveCount(1)
+        ->and($this->recordedEvents[0])->toEqual([
             'fileUpdated',
             $testFile,
-        ], $this->recordedEvents[0]);
+        ]);
 
-        $this->assertEquals($testFile, $this->modifiedPath);
-    }
+    expect($this->modifiedPath)->toEqual($testFile);
+});
 
-    /** @test */
-    public function it_can_detect_when_files_get_deleted()
-    {
-        $testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt';
+it('can detect when files get deleted', function () {
+    $testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'test.txt';
 
-        touch($testFile);
+    touch($testFile);
 
-        Watch::path($this->testDirectory)
-            ->onFileDeleted(function (string $path) {
-                $this->modifiedPath = $path;
-            })
-            ->onAnyChange(function (string $type, string $path) {
-                $this->recordedEvents[] = [$type, $path];
-            })
-            ->shouldContinue(function () use ($testFile) {
-                if ($this->i === 5) {
-                    unlink($testFile);
-                }
+    Watch::path($this->testDirectory)
+        ->onFileDeleted(function (string $path) {
+            $this->modifiedPath = $path;
+        })
+        ->onAnyChange(function (string $type, string $path) {
+            $this->recordedEvents[] = [$type, $path];
+        })
+        ->shouldContinue(function () use ($testFile) {
+            if ($this->i === 5) {
+                unlink($testFile);
+            }
 
-                $this->i++;
+            $this->i++;
 
-                return $this->i <= 7;
-            })
-            ->start();
+            return $this->i <= 7;
+        })
+        ->start();
 
-        $this->assertCount(1, $this->recordedEvents);
-        $this->assertEquals([
+    expect($this->recordedEvents)->toHaveCount(1)
+        ->and($this->recordedEvents[0])->toEqual([
             'fileDeleted',
             $testFile,
-        ], $this->recordedEvents[0]);
+        ]);
 
-        $this->assertEquals($testFile, $this->modifiedPath);
-    }
+    expect($this->modifiedPath)->toEqual($testFile);
+});
 
-    /** @test */
-    public function it_can_detect_when_a_directory_gets_created()
-    {
-        $newDirectoryPath = $this->testDirectory . DIRECTORY_SEPARATOR . 'new';
+it('can detect when a directory gets created', function () {
+    $newDirectoryPath = $this->testDirectory . DIRECTORY_SEPARATOR . 'new';
 
-        Watch::path($this->testDirectory)
-            ->onDirectoryCreated(function (string $path) {
-                $this->modifiedPath = $path;
-            })
-            ->onAnyChange(function (string $type, string $path) {
-                ray($type, $path);
-                $this->recordedEvents[] = [$type, $path];
-            })
-            ->shouldContinue(function () use ($newDirectoryPath) {
-                if ($this->i === 5) {
-                    mkdir($newDirectoryPath);
-                }
+    Watch::path($this->testDirectory)
+        ->onDirectoryCreated(function (string $path) {
+            $this->modifiedPath = $path;
+        })
+        ->onAnyChange(function (string $type, string $path) {
+            ray($type, $path);
+            $this->recordedEvents[] = [$type, $path];
+        })
+        ->shouldContinue(function () use ($newDirectoryPath) {
+            if ($this->i === 5) {
+                mkdir($newDirectoryPath);
+            }
 
-                $this->i++;
+            $this->i++;
 
-                return $this->i <= 7;
-            })
-            ->start();
+            return $this->i <= 7;
+        })
+        ->start();
 
-        $this->assertCount(1, $this->recordedEvents);
-        $this->assertEquals([
+    expect($this->recordedEvents)->toHaveCount(1)
+        ->and($this->recordedEvents[0])->toEqual([
             'directoryCreated',
             $newDirectoryPath,
-        ], $this->recordedEvents[0]);
+        ]);
 
-        $this->assertEquals($newDirectoryPath, $this->modifiedPath);
-    }
+    expect($this->modifiedPath)->toEqual($newDirectoryPath);
+});
 
-    /** @test */
-    public function it_can_detect_when_a_directory_gets_deleted()
-    {
-        $directoryPath = $this->testDirectory . DIRECTORY_SEPARATOR . 'new';
+it('can detect when a directory gets deleted', function () {
+    $directoryPath = $this->testDirectory . DIRECTORY_SEPARATOR . 'new';
 
-        $directory = (new TemporaryDirectory($directoryPath))->empty();
+    $directory = (new TemporaryDirectory($directoryPath))->empty();
 
-        Watch::path($this->testDirectory)
-            ->onDirectoryDeleted(function (string $path) {
-                $this->modifiedPath = $path;
-            })
-            ->onAnyChange(function (string $type, string $path) {
-                $this->recordedEvents[] = [$type, $path];
-            })
-            ->shouldContinue(function () use ($directory) {
-                if ($this->i === 5) {
-                    $directory->delete();
-                }
+    Watch::path($this->testDirectory)
+        ->onDirectoryDeleted(function (string $path) {
+            $this->modifiedPath = $path;
+        })
+        ->onAnyChange(function (string $type, string $path) {
+            $this->recordedEvents[] = [$type, $path];
+        })
+        ->shouldContinue(function () use ($directory) {
+            if ($this->i === 5) {
+                $directory->delete();
+            }
 
-                $this->i++;
+            $this->i++;
 
-                return $this->i <= 7;
-            })
-            ->start();
+            return $this->i <= 7;
+        })
+        ->start();
 
-        $this->assertCount(1, $this->recordedEvents);
-        $this->assertEquals([
+    expect($this->recordedEvents)->toHaveCount(1)
+        ->and($this->recordedEvents[0])->toEqual([
             'directoryDeleted',
             $directoryPath,
-        ], $this->recordedEvents[0]);
+        ]);
 
-        $this->assertEquals($directoryPath, $this->modifiedPath);
-    }
-}
+    expect($this->modifiedPath)->toEqual($directoryPath);
+});
