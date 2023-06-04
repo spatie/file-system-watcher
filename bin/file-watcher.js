@@ -4,6 +4,10 @@ const paths = JSON.parse(process.argv[2]);
 
 const watcher = chokidar.watch(paths, {
     ignoreInitial: true,
+    awaitWriteFinish: {
+        stabilityThreshold: 2000,
+        pollInterval: 100
+    }
 });
 
 watcher
