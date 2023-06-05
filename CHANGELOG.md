@@ -2,6 +2,22 @@
 
 All notable changes to `file-system-watcher` will be documented in this file.
 
+## 1.1.2 - 2023-06-05
+
+### What's Changed
+
+- Update .gitattributes by @angeljqv in https://github.com/spatie/file-system-watcher/pull/14
+- Refactor tests to Pest by @alexmanase in https://github.com/spatie/file-system-watcher/pull/15
+- wait for the file to be fully written on disk by @richardfrankza in https://github.com/spatie/file-system-watcher/pull/22
+
+### New Contributors
+
+- @angeljqv made their first contribution in https://github.com/spatie/file-system-watcher/pull/14
+- @alexmanase made their first contribution in https://github.com/spatie/file-system-watcher/pull/15
+- @richardfrankza made their first contribution in https://github.com/spatie/file-system-watcher/pull/22
+
+**Full Changelog**: https://github.com/spatie/file-system-watcher/compare/1.1.1...1.1.2
+
 ## 1.1.1 - 2022-06-16
 
 ### What's Changed
