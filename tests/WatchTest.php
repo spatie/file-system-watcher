@@ -32,7 +32,7 @@ it('can detect when files get created', function () {
 
             $this->i++;
 
-            return $this->i <= 7;
+            return $this->i <= 10;
         })
         ->start();
 
@@ -64,7 +64,7 @@ it('can detect when files get updated', function () {
 
             $this->i++;
 
-            return $this->i <= 7;
+            return $this->i <= 10;
         })
         ->start();
 
@@ -96,7 +96,7 @@ it('can detect when files get deleted', function () {
 
             $this->i++;
 
-            return $this->i <= 7;
+            return $this->i <= 10;
         })
         ->start();
 
@@ -127,7 +127,7 @@ it('can detect when a directory gets created', function () {
 
             $this->i++;
 
-            return $this->i <= 7;
+            return $this->i <= 10;
         })
         ->start();
 
@@ -159,7 +159,7 @@ it('can detect when a directory gets deleted', function () {
 
             $this->i++;
 
-            return $this->i <= 7;
+            return $this->i <= 10;
         })
         ->start();
 

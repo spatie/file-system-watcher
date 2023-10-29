@@ -124,13 +124,32 @@ class Watch
     {
         $watcher = $this->getWatchProcess();
 
+        $delimiter = PHP_EOL;
+        $buffer = '';
+
         while (true) {
             if (! $watcher->isRunning()) {
                 throw CouldNotStartWatcher::make($watcher);
             }
 
             if ($output = $watcher->getIncrementalOutput()) {
-                $this->actOnOutput($output);
+                $buffer .= $output;
+
+                // Find the last occurrence of the delimiter.
+                $lastDelimiterPos = strrpos($buffer, $delimiter);
+
+                // If a full line exists in the buffer, proceed to extract it.
+                if ($lastDelimiterPos !== false) {
+                    // Extract the complete lines and update the buffer.
+                    $completeLines = substr($buffer, 0, $lastDelimiterPos);
+                    $buffer = substr($buffer, $lastDelimiterPos + strlen($delimiter));
+
+                    // Create an array with the complete lines.
+                    $array = array_filter(explode($delimiter, $completeLines));
+
+                    // Call the function to act on the output.
+                    $this->actOnOutput($array);
+                }
             }
 
             if (! ($this->shouldContinue)()) {
@@ -159,12 +178,8 @@ class Watch
         return $process;
     }
 
-    protected function actOnOutput(string $output): void
+    protected function actOnOutput(array $lines): void
     {
-        $lines = explode(PHP_EOL, $output);
-
-        $lines = array_filter($lines);
-
         foreach ($lines as $line) {
             [$type, $path] = explode(' - ', $line, 2);
 

@@ -13,3 +13,4 @@ tests/testDirectory
 yarn.lock
 .php-cs-fixer.cache
 node_modules
+.DS_Store
