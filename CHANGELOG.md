@@ -2,6 +2,18 @@
 
 All notable changes to `file-system-watcher` will be documented in this file.
 
+## 1.2.0 - 2024-03-04
+
+### What's Changed
+
+* Allow Symfony 7.x by @thecaliskan in https://github.com/spatie/file-system-watcher/pull/25
+
+### New Contributors
+
+* @thecaliskan made their first contribution in https://github.com/spatie/file-system-watcher/pull/25
+
+**Full Changelog**: https://github.com/spatie/file-system-watcher/compare/1.1.2...1.2.0
+
 ## 1.1.2 - 2023-06-05
 
 ### What's Changed
