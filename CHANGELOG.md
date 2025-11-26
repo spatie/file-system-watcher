@@ -2,6 +2,19 @@
 
 All notable changes to `file-system-watcher` will be documented in this file.
 
+## 1.2.1 - 2025-11-26
+
+### What's Changed
+
+* Update issue template by @AlexVanderbist in https://github.com/spatie/file-system-watcher/pull/29
+* Added Symfony 8 support to all symfony/* packages. by @thecaliskan in https://github.com/spatie/file-system-watcher/pull/31
+
+### New Contributors
+
+* @AlexVanderbist made their first contribution in https://github.com/spatie/file-system-watcher/pull/29
+
+**Full Changelog**: https://github.com/spatie/file-system-watcher/compare/1.2.0...1.2.1
+
 ## 1.2.0 - 2024-03-04
 
 ### What's Changed
