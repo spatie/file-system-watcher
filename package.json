@@ -1,5 +1,6 @@
 {
-  "devDependencies": {
-    "chokidar": "^3.5.1"
+  "devDependencies": {},
+  "dependencies": {
+    "chokidar": "4"
   }
 }

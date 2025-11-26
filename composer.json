@@ -15,15 +15,13 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "symfony/process": "^5.2|^6.0|^7.0|^8.0"
+        "php": "^8.3",
+        "symfony/process": "^7.0|^8.0"
     },
     "require-dev": {
-        "pestphp/pest": "^1.22",
-        "phpunit/phpunit": "^9.5",
+        "pestphp/pest": "^4.0",
         "spatie/ray": "^1.22",
-        "spatie/temporary-directory": "^2.0",
-        "vimeo/psalm": "^4.3"
+        "spatie/temporary-directory": "^2.0"
     },
     "autoload": {
         "psr-4": {
